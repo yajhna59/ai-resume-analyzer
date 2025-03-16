@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analyzer</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        #result { margin-top: 20px; padding: 10px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h2>Upload Your Resume</h2>
+    <input type="file" id="resumeInput">
+    <button onclick="analyzeResume()">Analyze</button>
+
+    <div id="result"></div>
+
+    <script>
+        async function analyzeResume() {
+            const fileInput = document.getElementById("resumeInput");
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please upload a resume!");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("file", file);
+
+            const response = await fetch("http://127.0.0.1:8000/analyze-resume", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            document.getElementById("result").innerHTML = `
+                <h3>Feedback:</h3>
+                <p>${data.feedback}</p>
+                <h3>Skills to Improve:</h3>
+                <ul>${data.skills_needed.map(skill => `<li>${skill}</li>`).join("")}</ul>
+            `;
+        }
+    </script>
+</body>
+</html>
