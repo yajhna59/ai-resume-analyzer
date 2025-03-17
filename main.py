@@ -6,8 +6,20 @@ import shutil
 import os
 import re
 from starlette.responses import JSONResponse
+import os
+import uvicorn
+from fastapi import FastAPI
 
 app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"message": "FastAPI is running on Render!"}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))  # Default 10000 but overridden by Render
+    uvicorn.run(app, host="0.0.0.0", port=port)
+
 
 # Enable CORS for frontend integration
 app.add_middleware(
@@ -48,6 +60,10 @@ def extract_contact_info(text):
 def extract_skills(text):
     found_skills = [skill for skill in SKILLS_LIST if skill.lower() in text.lower()]
     return found_skills
+@app.post("/predict")
+async def predict(data: dict):
+    return {"prediction": "Your prediction result here"}
+
 
 # Resume Analyzer API
 @app.post("/analyze-resume")
@@ -91,3 +107,6 @@ async def analyze_resume(file: UploadFile = File(...)):
 @app.get("/")
 async def root():
     return {"message": "Welcome to the AI Resume Analyzer API!"}
+@app.post("/predict")
+async def predict(data: dict):
+    return {"prediction": "Your prediction result here"}
