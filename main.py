@@ -6,18 +6,17 @@ import shutil
 import os
 import re
 from starlette.responses import JSONResponse
-import os
 import uvicorn
-from fastapi import FastAPI
 
 app = FastAPI()
+
 
 @app.get("/")
 def home():
     return {"message": "FastAPI is running on Render!"}
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))  # Default 10000 but overridden by Render
+    port = int(os.environ.get("PORT", 8000))  # Default 10000 but overridden by Render
     uvicorn.run(app, host="0.0.0.0", port=port)
 
 
@@ -104,9 +103,17 @@ async def analyze_resume(file: UploadFile = File(...)):
     })
 
 # Root endpoint
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the AI Resume Analyzer API!"}
+
 @app.post("/predict")
 async def predict(data: dict):
     return {"prediction": "Your prediction result here"}
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the AI Resume Analyzer API!"}
+
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
+
+
