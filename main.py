@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from main import app
 import pdfplumber
 import docx
 import shutil
@@ -16,7 +17,7 @@ def home():
     return {"message": "FastAPI is running on Render!"}
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))  # Default 10000 but overridden by Render
+    port = int(os.environ.get("PORT", 10000))  # Default 10000 but overridden by Render
     uvicorn.run(app, host="0.0.0.0", port=port)
 
 
